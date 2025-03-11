@@ -1,0 +1,649 @@
+local Library = loadstring(game:HttpGet("https://pastebin.com/raw/3KnF5vzZ"))()
+
+local gameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
+
+local Window = Library:CreateWindow('ExplanHUB | New UI', 'Game Name: ' .. gameName, 'Visual UI Library', 'rbxassetid://10618928818', false, 'VisualUIConfigs', 'Default')
+
+local Information = Window:CreateTab('Information', true, 'rbxassetid://3926305904', Vector2.new(484, 44), Vector2.new(36, 36))
+
+local PlayerInformation = Information:CreateSection('Player Information')
+
+local Players = game:GetService("Players")
+
+local LocalPlayer = Players.LocalPlayer
+
+local Label = PlayerInformation:CreateLabel('Your Username: ' .. LocalPlayer.Name)
+
+local Label = PlayerInformation:CreateLabel('Your Nickname: ' .. LocalPlayer.DisplayName)
+
+local Label = PlayerInformation:CreateLabel('Your UserID: ' .. LocalPlayer.UserId)
+
+local PlayerSettings = Window:CreateTab('Player Settings', false, 'rbxassetid://3926305904', Vector2.new(484, 44), Vector2.new(36, 36))
+
+local SettingsForPlayer = PlayerSettings:CreateSection('Settings For Player Character')
+
+local Label = SettingsForPlayer:CreateLabel('Reset Player Settings')
+
+local Button = SettingsForPlayer:CreateButton('Reset To 16 Speed', function()
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+end)
+
+local Button = SettingsForPlayer:CreateButton('Reset To 50 JumpPower', function()
+    game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50
+end)
+
+local Button = SettingsForPlayer:CreateButton('Reset To 70 FieldOfView', function()
+    Workspace.CurrentCamera.FieldOfView = 70
+end)
+
+local savedWalkSpeed = 16
+local savedJumpPower = 50
+local savedFieldOfView = 70
+local isSaveSettingsEnabled = false -- Default: Mati
+
+local function saveSettings(walkSpeed, jumpPower, fieldOfView)
+    if isSaveSettingsEnabled then
+        savedWalkSpeed = walkSpeed
+        savedJumpPower = jumpPower
+        savedFieldOfView = fieldOfView
+    end
+end
+
+local function applySavedSettings(character)
+    if isSaveSettingsEnabled then
+        local humanoid = character:WaitForChild("Humanoid")
+        humanoid.WalkSpeed = savedWalkSpeed
+        humanoid.JumpPower = savedJumpPower
+        Workspace.CurrentCamera.FieldOfView = savedFieldOfView
+    else
+        -- Jika toggle mati, kembalikan ke pengaturan default
+        local humanoid = character:WaitForChild("Humanoid")
+        humanoid.WalkSpeed = 16
+        humanoid.JumpPower = 50
+        Workspace.CurrentCamera.FieldOfView = 70
+    end
+end
+
+LocalPlayer.CharacterAdded:Connect(applySavedSettings)
+
+if LocalPlayer.Character then
+    applySavedSettings(LocalPlayer.Character)
+end
+
+local Label = SettingsForPlayer:CreateLabel('-- Save Player Settings [working] --')
+
+local Toggle = SettingsForPlayer:CreateToggle('Save Player Settings', false, Color3.fromRGB(0, 125, 255), 0.25, function(Value)
+    isSaveSettingsEnabled = Value
+end)
+
+local Label = SettingsForPlayer:CreateLabel('Speed Player Settings')
+
+local Button = SettingsForPlayer:CreateButton('Set To 50 Speed', function()
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 50
+    saveSettings(50, savedJumpPower, savedFieldOfView)
+end)
+
+local Textbox = SettingsForPlayer:CreateTextbox('Set WalkSpeed', 'Input Here', function(Value)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+    saveSettings(Value, savedJumpPower, savedFieldOfView)
+end)
+
+local Slider = SettingsForPlayer:CreateSlider('WalkSpeed', 16, 120, 16, Color3.fromRGB(0, 125, 255), function(Value)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+    saveSettings(Value, savedJumpPower, savedFieldOfView)
+end)
+
+local Label = SettingsForPlayer:CreateLabel('Jump Player Settings')
+
+local Button = SettingsForPlayer:CreateButton('Set To 70 Jump', function()
+    game.Players.LocalPlayer.Character.Humanoid.JumpPower = 70
+    saveSettings(savedWalkSpeed, 70, savedFieldOfView)
+end)
+
+local Textbox = SettingsForPlayer:CreateTextbox('Set JumpPower', 'Input', function(Value)
+    game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
+    saveSettings(savedWalkSpeed, Value, savedFieldOfView)
+end)
+
+local Slider = SettingsForPlayer:CreateSlider('JumpPower', 50, 120, 50, Color3.fromRGB(0, 125, 255), function(Value)
+    game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
+    saveSettings(savedWalkSpeed, Value, savedFieldOfView)
+end)
+
+local Label = SettingsForPlayer:CreateLabel('Field Of View Player Settings')
+
+local Button = SettingsForPlayer:CreateButton('Set To 90 FOV', function()
+    Workspace.CurrentCamera.FieldOfView = 90
+    saveSettings(savedWalkSpeed, savedJumpPower, 90)
+end)
+
+local Textbox = SettingsForPlayer:CreateTextbox('Set Field Of View', 'Input', function(Value)
+    Workspace.CurrentCamera.FieldOfView = Value
+    saveSettings(savedWalkSpeed, savedJumpPower, Value)
+end)
+
+local Slider = SettingsForPlayer:CreateSlider('Field Of View', 70, 120, 70, Color3.fromRGB(0, 125, 255), function(Value)
+    Workspace.CurrentCamera.FieldOfView = Value
+    saveSettings(savedWalkSpeed, savedJumpPower, Value)
+end)
+
+local UISettings = Window:CreateTab('UI Settings', False, 'rbxassetid://3926305904', Vector2.new(484, 44), Vector2.new(36, 36))
+
+local LibraryUISettings = UISettings:CreateSection('Library UI Settings')
+
+local Label = LibraryUISettings:CreateLabel('Toggle UI')
+
+local Button = LibraryUISettings:CreateButton('Keyboard', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/advxzivhsjjdhxhsidifvsh/mobkeyboard/main/main.txt", true))()
+end)
+
+local Keybind = LibraryUISettings:CreateKeybind('Set Keybind', 'N', function()
+    print('Key Pressed')
+end)
+
+local UISection = UISettings:CreateSection('UI Library Settings')
+
+local TransparencySlider = UISection:CreateSlider('UI Transparency', 0, 100, 0, Color3.fromRGB(0, 125, 255), function(Value)
+    Library:SetTransparency(Value / 100, true)
+end)
+
+local Colorpicker = UISection:CreateColorpicker('Pick Color UI', Color3.fromRGB(0, 125, 255), 0.25, function(Value)
+    print(Value)
+end)
+
+local ThemesDropdown = UISection:CreateDropdown('Themes', Library:GetThemes(), nil, 0.25, function(Value)
+    Library:ChangeTheme(Value)
+end)
+
+for Index, CurrentColor in next, Library:ReturnTheme() do
+    UISection:CreateColorpicker(Index, CurrentColor, 0.25, function(Color)
+        Library:ChangeColor(Index, Color)
+    end, {true})
+end
+
+local MoreScript = Window:CreateTab('【🎮】All Script In One', False, 'rbxassetid://3926305904', Vector2.new(484, 44), Vector2.new(36, 36))
+
+local AllScriptInOne = MoreScript:CreateSection('List All Script In One')
+
+local Button = AllScriptInOne:CreateButton('GamesHUB V6.1', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/TakeModzz/Games-Hub-Script/main/Games%20Hub%20(Always%20updated)"))()
+end)
+
+local Button = AllScriptInOne:CreateButton('GamesHUB V5.0', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/TakeModzz/Games-Hub-V5-Selector-Fixed/main/Games"))()
+end)
+
+local Button = AllScriptInOne:CreateButton('B Genesis V1.2', function()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/raw-scriptpastebin/raw/main/B_Genesis'))()
+end)
+
+local Button = AllScriptInOne:CreateButton('Sxrge HUB', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/sxrge3k/sxrge_ssh_hub/main/sxrge_script_hub"))()
+end)
+
+local Button = AllScriptInOne:CreateButton('V HUB V1', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/V31nc/2642/Created/VHub"))()
+end)
+
+local Button = AllScriptInOne:CreateButton('V HUB V2', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/rblxscriptsnet/rblxhub/main/rblxhub.lua"))()
+end)
+
+local Button = AllScriptInOne:CreateButton('Rizz', function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/pPMRh5YJ"))()
+end)
+
+local Button = AllScriptInOne:CreateButton('Script HUB V2', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/scripthubekitten/SCRIPTHUBV2/main/SCRIPTHUBV2", true))()
+end)
+
+local OtherScript = Window:CreateTab('【💬】Other Script', true, 'rbxassetid://3926305904', Vector2.new(484, 44), Vector2.new(36, 36))
+
+local Other = OtherScript:CreateSection('Other Script')
+
+local Toggle = Other:CreateToggle('Fullbright', true, Color3.fromRGB(0, 125, 255), 0.25, function(Value)
+    loadstring(game:HttpGet(('https://pastebin.com/raw/06iG6YkU'),true))()
+end)
+
+local Label = Other:CreateLabel('Or')
+
+local Button = Other:CreateButton('Fullbright [Click Again For Disable]', function()
+    loadstring(game:HttpGet(('https://pastebin.com/raw/06iG6YkU'),true))()
+end)
+
+local Button = Other:CreateButton('Fly 【Mobile】', function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/ySypYydL"))()
+end)
+
+local Button = Other:CreateButton('Fly HD Admin V1 【Made By = DXP Team】', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/TakeModzz/Ignore-00000/main/Ignore"))()
+end)
+
+local Button = Other:CreateButton('Permanent ShiftLock', function()
+    loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-Permanent-Shiftlock-11830"))()
+end)
+
+local Button = Other:CreateButton('Noclip', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GamerAbhiyanYT/Script-Op/main/SCRIPT%20Noclip"))()
+end)
+
+local Button = Other:CreateButton('Infinite Jump 【🚨Anti Rejoin🚨】', function()
+    loadstring(game:HttpGet(('https://pastebin.com/raw/V3DKCQTT'),true))()
+end)
+
+local Button = Other:CreateButton('Infinite Jump V2', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/shakar60/oksinfjump/main/workssssss",true))()
+end)
+
+local Button = Other:CreateButton('Infinite Yield', function()
+    loadstring(game:HttpGet(('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'),true))()
+end)
+
+local Button = Other:CreateButton('Esp Player 【Name】', function()
+    loadstring(game:HttpGet(('https://raw.githubusercontent.com/zachisfunny/ROBLOX-ESP/main/Script'),true))()
+end)
+
+local Button = Other:CreateButton('Esp Player 【Cham】', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GamerAbhiyanYT/SCRIPT-credit/main/SCRIPT%20%3D%20Esp%20Player%20%E3%80%90Cham%202%E3%80%91"))()
+end)
+
+local Button = Other:CreateButton('Keyboard V1', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/advxzivhsjjdhxhsidifvsh/mobkeyboard/main/main.txt", true))()
+end)
+
+local Button = Other:CreateButton('Keyboard V2', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/BatuKvi123/Keyboardv3/main/mobKeyboard"))()
+end)
+
+local Button = Other:CreateButton('Keyboard V3', function()
+    loadstring(game:HttpGet("https://gist.githubusercontent.com/RedZenXYZ/4d80bfd70ee27000660e4bfa7509c667/raw/da903c570249ab3c0c1a74f3467260972c3d87e6/KeyBoard%2520From%2520Ohio%2520Fr%2520Fr"))()
+end)
+
+local Button = Other:CreateButton('Teleport Tool', function()
+    loadstring(game:HttpGet(('https://pastebin.com/raw/iMKYkmcu'),true))()
+end)
+
+local Button = Other:CreateButton('Auto Piano', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Sw1ndlerScripts/RobloxScripts/main/Misc Scripts/PianoAutoplayer.lua",true))()
+end)
+
+local Button = Other:CreateButton('BetterRoblox V2', function()
+    loadstring(game:HttpGet("https://eternityhub.xyz/BetterRoblox/Loader"))()
+end)
+
+local Button = Other:CreateButton('AutoClicker', function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/CmVvdeuc"))()
+end)
+
+local Button = Other:CreateButton('Rejoin Button On Disconnected', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/rouxhaver/scripts-2/main/rejoin%20button%20for%20kick%20message.lua"))()
+end)
+
+local Button = Other:CreateButton('Dont Press Me', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Kitzoon/Rogue-Hub/main/Main.lua", true))()
+end)
+
+local Button = Other:CreateButton('Never Press This Button', function()
+    -- Removing UI from CoreGui
+    for _, v in pairs(game.CoreGui:GetChildren()) do
+        if v:IsA("ScreenGui") then
+            v:Destroy()
+        end
+    end
+    
+    -- Removing UI from PlayerGui
+    for _, v in pairs(game.Players.LocalPlayer.PlayerGui:GetChildren()) do
+        if v:IsA("ScreenGui") then
+            v:Destroy()
+        end
+    end
+end)
+
+local Button = Other:CreateButton('Rejoin', function()
+    game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
+end)
+
+local ScriptFE = Window:CreateTab('【👀】Script FE', False, 'rbxassetid://3926305904', Vector2.new(484, 44), Vector2.new(36, 36))
+
+local ListScriptFE = ScriptFE:CreateSection('List Of Script FE')
+
+local Label = ListScriptFE:CreateLabel('If You Use Noclip And FE Invisible Together, Noclip Will Not Work Properly.')
+
+local Button = ListScriptFE:CreateButton('FE Invisible', function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/2ucYrZ9H"))()
+end)
+
+local Button = ListScriptFE:CreateButton('FE Animation R15', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GamingScripter/Animation-Hub/main/Animation%20Gui", true))()
+end)
+
+local Button = ListScriptFE:CreateButton('FE Rewind', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/0Ben1/fe./main/L"))()
+end)
+
+local Button = ListScriptFE:CreateButton('FE Kill', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GamerAbhiyanYT/Scrim/main/Kill"))()
+end)
+
+local Button = ListScriptFE:CreateButton('FE Free Emote', function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/eCpipCTH"))()
+end)
+
+local Button = ListScriptFE:CreateButton('FE Anti Fling V1', function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/Q0Nh2SYx"))()
+end)
+
+local Button = ListScriptFE:CreateButton('FE Anti Fling V2', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/shakar60/anti.-./main/fling",true))()
+end)
+
+local Button = ListScriptFE:CreateButton('FE Anti Fling V3', function()
+    loadstring(game:HttpGet(('https://pastebin.com/raw/GxdesRQx'),true))()
+end)
+
+local Button = ListScriptFE:CreateButton('FE Fling V1', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/0Ben1/fe./main/Fling%20GUI"))()
+end)
+
+local Button = ListScriptFE:CreateButton('FE Fling V2', function()
+    loadstring(game:HttpGet('https://pastebin.com/raw/r97d7dS0', true))()
+end)
+
+local Button = ListScriptFE:CreateButton('FE Click To Fling', function()
+    loadstring(game:HttpGet(('https://raw.githubusercontent.com/0Ben1/fe/main/obf_4Q10q272NIQc093Os32uBi29U9PWkU0d3Tr1Uh4k92vus2u10786Z0jep5uhqE2N.lua.txt'),true))()
+end)
+
+local Button = ListScriptFE:CreateButton('FE R15 To R6', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Imagnir/r6_anims_for_r15/main/r6_anims.lua", true))()
+end)
+
+local Button = ListScriptFE:CreateButton('FE Lift Player', function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/yJuZWddm"))()
+end)
+
+local Button = ListScriptFE:CreateButton('FE Chat Executor', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/zephyr10101/chat-executor/main/chat-executor",true))()
+end)
+
+local Button = ListScriptFE:CreateButton('FE Sound Panel', function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/SWsFdk2U"))()
+end)
+
+local Button = ListScriptFE:CreateButton('FE Fake Lag', function()
+    loadstring(game:HttpGet('https://pastebin.com/raw/VM3b0Thg'))()
+end)
+
+local Button = ListScriptFE:CreateButton('FE Switch Lag', function()
+    loadstring(game:HttpGet(('https://raw.githubusercontent.com/0Ben1/fe/main/Protected%20-%202023-05-28T225112.055.lua.txt'),true))()
+end)
+
+local Games = Window:CreateTab('【🎮】Games', false, 'rbxassetid://3926305904', Vector2.new(484, 44), Vector2.new(36, 36))
+
+local GamesScriptList = Games:CreateSection('Games Script List')
+
+local Button = GamesScriptList:CreateButton('Survive The Killer', function()
+    loadstring(game:HttpGet("https://scriptblox.com/raw/Survive-the-Killer!-iluv-stk-script-8913", true))()
+end)
+
+local Button = GamesScriptList:CreateButton('Survive The Killer | ChairWare', function()
+    loadstring(game:HttpGet("https://scriptblox.com/raw/Survive-the-Killer!-ChairWare-Hub-9854"))()
+end)
+
+local Button = GamesScriptList:CreateButton('Doors | MSDOORS Working', function()
+    loadstring(game:HttpGet(("https://raw.githubusercontent.com/mstudio45/MSDOORS/7bd97c2d956a775d683c2d7973d79715b30998ea/MSDOORS/Moonsec.lua"),true))()
+end)
+
+local Button = GamesScriptList:CreateButton('Doors | POOPDOORS', function()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/zoophiliaphobic/POOPDOORS/main/script.lua'))()
+end)
+
+local Button = GamesScriptList:CreateButton('Doors | Vynixius', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Vynixius/main/Doors/Script.lua"))()
+end)
+
+local Button = GamesScriptList:CreateButton('Doors | Darkrai-X', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GamingScripter/Darkrai-X/main/Games/Doors"))()
+end)
+
+local Button = GamesScriptList:CreateButton('Doors | Nerd V4', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/MrNeRD0/Doors-Hack/main/doorsnerdv4.lua"))()
+end)
+
+local Button = GamesScriptList:CreateButton('Natural Disaster Survival | GreenBallon', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/2dgeneralspam1/scripts-and-stuff/master/scripts/LoadstringUjHI6RQpz2o8" , true))()
+end)
+
+local Button = GamesScriptList:CreateButton('Natural Disaster Survival | My Script', function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/FktJaRpR"))()
+end)
+
+local Button = GamesScriptList:CreateButton('MeepCity', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/synolope/mpcity/main/mainscript.lua",true))()
+end)
+
+local Button = GamesScriptList:CreateButton('Rainbow Friends', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/JNHHGaming/Rainbow-Friends/main/Rainbow%20Friends"))()
+end)
+
+local Button = GamesScriptList:CreateButton('Rainbow Friends | Chapter 2', function()
+    loadstring(game:HttpGet(('https://raw.githubusercontent.com/stillnotgivingafuck/LuckyBlocks/main/loader.lua')))()
+end)
+
+local Button = GamesScriptList:CreateButton('Rainbow Friends | BrokWare', function()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/Ihaveash0rtnamefordiscord/BorkWare/main/Scripts/' .. game.GameId .. ".lua"))(' Watermelon ? ')
+end)
+
+local Button = GamesScriptList:CreateButton('Evade', function()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/9Strew/roblox/main/gamescripts/evade.lua'))()
+end)
+
+local Label = GamesScriptList:CreateLabel('Blox Hunt Key = RoxHub_KeyZRTEDFGQERZX')
+
+local Button = GamesScriptList:CreateButton('Blox Hunt', function()
+    pcall(function()
+        Rox_Hub = true
+            loadstring(game:HttpGet("https://gist.githubusercontent.com/HaxxV1/d7cfdb5090e819a84a8db22fb113f39d/raw"))()
+        end)
+    setclipboard("RoxHub_KeyZRTEDFGQERZX")
+end)
+
+local Button = GamesScriptList:CreateButton('Tower Of Hell', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/TrixAde/Proxima-Hub/main/Main.lua"))
+end)
+
+local Button = GamesScriptList:CreateButton('Flee The Falicity', function()
+    if game.PlaceId == 893973440 or game.PlaceId == 1738581510 then
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/bedra45/Random-games-xd/main/bedraFtfFinalGUI"))()
+    else
+        game:GetService("StarterGui"):SetCore("SendNotification",{
+        Title = "Note!",
+        Text = "Please Join Flee the facility first."
+        })
+    end
+end)
+
+local Label = GamesScriptList:CreateLabel('Cart Ride Around Nothing Key = cart1ride2around3nothing12345..!!990')
+
+local Button = GamesScriptList:CreateButton('Cart Ride Around Nothing', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/LOLking123456/ride-cart/main/Cart11"))()
+setclipboard("cart1ride2around3nothing12345..!!990")
+end)
+
+local Button = GamesScriptList:CreateButton('Break In [Story] V1', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/RubyBoo4life/break-in-v1/main/.gitignore"))();
+end)
+
+local Button = GamesScriptList:CreateButton('My Restaurant | AutoFarm', function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/kV7cu04b"))()
+end)
+
+local Button = GamesScriptList:CreateButton('Build A Boat For Treasure', function()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/1201for/littlegui/main/Build-A-Boat'))()
+end)
+
+local Button = GamesScriptList:CreateButton('SteepSteps', function()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/Cutsences/SteepSteps/main/SteepSteps.lua'))()
+end)
+
+local Button = GamesScriptList:CreateButton('Pls Donate', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/CF-Trail/tzechco-PlsDonateAutofarmBackup/main/autofarm"))()
+end)
+
+local Button = GamesScriptList:CreateButton('Pet Simulator X', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Muhammad6196/Project-WD/main/Mainstring.lua"))()
+end)
+
+local Button = GamesScriptList:CreateButton('BloxFruit', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/sinret/rbxscript.com-scripts-reuploads-/main/bf1", true))()
+end)
+
+local Button = GamesScriptList:CreateButton('Get To The Top', function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/FbHPCWdK"))()
+end)
+
+local Button = GamesScriptList:CreateButton('Adopt Me | Pick Adopt Me If You See An Option', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/IceMael7/NewIceHub/main/Brookhaven"))()
+end)
+
+local Button = GamesScriptList:CreateButton('BedWars', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/bojoexploitz/yooo/main/itsobfuscated/InfinityHubTooOP", true))()
+end)
+
+local Button = GamesScriptList:CreateButton('Clone Tycoon 2', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/frencaliber/LuaWareLoader.lw/main/luawareloader.wtf",true))()
+end)
+
+local Button = GamesScriptList:CreateButton('Millionaire Empire Tycoon | Cash = 1000000000', function()
+    while true do
+	        game:GetService("ReplicatedStorage").RespawnService:FireServer(1000000000)
+	    task.wait()
+    end
+end)
+
+local Button = GamesScriptList:CreateButton('BrookHaven | Pick BrookHaven If You See An Option', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/IceMael7/NewIceHub/main/Brookhaven"))()
+end)
+
+local Button = GamesScriptList:CreateButton('Epic Minigames', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/SlamminPig/rblxgames/main/Epic%20Minigames/EpicMinigamesGUI"))()
+end)
+
+local Button = GamesScriptList:CreateButton('Murder Mystery 2', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Ethanoj1/EclipseMM2/master/Script", true))()
+end)
+
+local Button = GamesScriptList:CreateButton('Murder Mystery 2 | AutoFarm', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ToraIsMe/ToraIsMe/main/0mm"))()
+end)
+
+local Button = GamesScriptList:CreateButton('Cant Say The Word', function()
+    loadstring(game:HttpGet("https://scriptblox.com/raw/Cant-Say-the-Word-Lets-you-say-your-word-UNPATCHABLE-4679"))()
+end)
+
+local Button = GamesScriptList:CreateButton('The Intruder', function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/FGjjwm6W"))()
+end)
+
+local Button = GamesScriptList:CreateButton('Mega Hide And Seek', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ToraIsMe/ToraIsMe/main/0megahide"))()
+end)
+
+local Button = GamesScriptList:CreateButton('Cart Ride Into Rdite', function()
+    loadstring(game:HttpGet(('https://raw.githubusercontent.com/hussain1323232234/My-Scripts/main/Cart%20Ride%20Into%20Rdite!'),true))()
+end)
+
+local Button = GamesScriptList:CreateButton('The Mimic', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ph-hub/The-Mimic/main/WizardUi.lua",true))()
+end)
+
+local Button = GamesScriptList:CreateButton('Super Simon Says', function()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/creepstu/special-octo-umbrella/main/Source'))()
+end)
+
+local Button = GamesScriptList:CreateButton('Despicable Me 4 Heist Obby', function()
+    while wait() do game.MarketplaceService:SignalPromptPurchaseFinished(game.Players.LocalPlayer,17596052530,false) end
+end)
+
+local Button = GamesScriptList:CreateButton('Infinite Money / UGC Limited', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Imalwibest/Imalwibest/main/wynerdV2.lua",true))()
+end)
+
+local Button = GamesScriptList:CreateButton('The Best Strongest Battle Ground', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ShowerHead-FluxTeam/scripts/main/funky-friday-autoplay"))()
+end)
+
+local Universal = Window:CreateTab('【🌐】Universal', false, 'rbxassetid://3926305904', Vector2.new(484, 44), Vector2.new(36, 36))
+
+local ListOfUniversal = Universal:CreateSection('List Of Universal Script')
+
+local Button = ListOfUniversal:CreateButton('Universal Aimbot V2', function()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/PABLOSleuth2/Scripts1/main/RobloxScripts/TEST/aimbot_v2.lua'))()
+end)
+
+local Button = ListOfUniversal:CreateButton('Universal Silent Aim', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/shakar60/silents.aim/main/s",true))()
+end)
+
+local GuiOrHub = Window:CreateTab('【🔲】GUI / HUB', false, 'rbxassetid://3926305904', Vector2.new(484, 44), Vector2.new(36, 36))
+
+local Gui = GuiOrHub:CreateSection('Gui')
+
+local Button = Gui:CreateButton('Yeet GUI', function()
+    loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-FE-Yeet-GUI-9620"))()
+end)
+
+local Button = Gui:CreateButton('RTX Gui', function()
+    loadstring(game:HttpGet(('https://pastefy.ga/xXkUxA0P/raw'),true))()
+end)
+
+local Button = Gui:CreateButton('Admin Gui', function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/fatesc/fates-admin/main/main.lua"))()
+end)
+
+local Button = Gui:CreateButton('RoGhoul Script Gui', function()
+    loadstring(game:HttpGet"https://raw.githubusercontent.com/xQuartyx/DonateMe/main/ScriptLoader")()
+end)
+
+local Hub = GuiOrHub:CreateSection('Hub')
+
+local Button = Hub:CreateButton('No Hub Found', function()
+    warn('No Hub')
+end)
+
+local Credits = Window:CreateTab('Credits', False, 'rbxassetid://3926305904', Vector2.new(484, 44), Vector2.new(36, 36))
+
+local AllCredits = Credits:CreateSection('All Credits')
+
+local Label = AllCredits:CreateLabel('-- MoveAble Ui Library --')
+
+local Label = AllCredits:CreateLabel('Jacking1914')
+
+local Label = AllCredits:CreateLabel('-- Fix Slider UI Library [On Mobile] --')
+
+local Label = AllCredits:CreateLabel('Jacking1914')
+
+local Label = AllCredits:CreateLabel('-- ExplanHUB Creator --')
+
+local Label = AllCredits:CreateLabel('GamerAbhiyan')
+
+local Showcase = Credits:CreateSection('-- Showcase --')
+
+local Label = Showcase:CreateLabel('-- Showcase --')
+
+local Label = Showcase:CreateLabel('1. GamerAbhiyan')
+
+local Button = Showcase:CreateButton('Copy Link Channel', function()
+    setclipboard("https://m.youtube.com/channel/UCsKTRnX-9YLe_S9RdHVCysg")
+end)
+
+local Label = Showcase:CreateLabel('2. ???')
+
+local Button = Showcase:CreateButton('2. ???', function()
+    print('Button Pressed')
+end)
+
+local Label = Showcase:CreateLabel('3. ???')
+
+local Button = Showcase:CreateButton('3. ???', function()
+    print('Button Pressed')
+end)
