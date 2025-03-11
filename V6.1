@@ -161,6 +161,10 @@ for Index, CurrentColor in next, Library:ReturnTheme() do
     end, {true})
 end
 
+local DestroyButton = UiSection:CreateButton('Destroy UI', function()
+    Library:DestroyUI()
+end)
+
 local MoreScript = Window:CreateTab('【🎮】All Script In One', False, 'rbxassetid://3926305904', Vector2.new(484, 44), Vector2.new(36, 36))
 
 local AllScriptInOne = MoreScript:CreateSection('List All Script In One')
